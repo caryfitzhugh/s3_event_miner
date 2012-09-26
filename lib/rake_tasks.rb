@@ -75,19 +75,33 @@ task :run => :create_bucket do
     jobflow = Elasticity::JobFlow.new(ENV['AMAZON_ACCESS_KEY_ID'], ENV['AMAZON_SECRET_ACCESS_KEY'])
     jobflow.name = "#{selected_job[:name]} -- #{outbucket}"
     jobflow.placement                         = 'us-east-1a'
-    jobflow.instance_count       = 1
+    jobflow.instance_count       = 2
     jobflow.master_instance_type = 'm1.small'
     jobflow.slave_instance_type  = 'm1.small'
 
     # Input bucket, output bucket, mapper and reducer scripts
-    streaming_step = Elasticity::StreamingStep.new(
-      "s3n://#{selected_job[:input]}",
-      "s3n://#{outbucket}",
-      "s3n://#{S3_BUCKET}/data/jobs/#{job_name}/mapper.rb",
-      "s3n://#{S3_BUCKET}/data/jobs/#{job_name}/reducer.rb")
+    input_loc = "s3n://#{selected_job[:input]}"
+    output_loc= "s3n://#{outbucket}"
+    mapper    = "s3n://#{S3_BUCKET}/data/jobs/#{selected_job[:name]}/mapper.rb"
+    reducer   = "s3n://#{S3_BUCKET}/data/jobs/#{selected_job[:name]}/reducer.rb"
+    puts "input:"
+    puts input_loc
+    puts "\noutput:"
+    puts output_loc
+    puts "\nmapper:"
+    puts mapper
+    puts "\nreducer:"
+    puts reducer
 
-    jobflow.add_step(streaming_step)
-    jobflow.run
+    #   streaming_step = Elasticity::StreamingStep.new( input_loc, output_loc, mapper, reducer)
+    #   jobflow.add_step(streaming_step)
+    #   puts "Added streaming step.."
+    #   puts streaming_step
+    #
+    #   puts "Starting..."
+    #   jobflow.run
+    #   puts "Running..."
+
   else
     puts "You needed to say 'yes'"
   end

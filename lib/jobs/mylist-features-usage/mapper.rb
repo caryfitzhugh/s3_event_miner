@@ -2,10 +2,11 @@
 require 'rubygems'
 require 'pry'
 require 'uri'
+STDERR.puts "Starting Mylist Features Mapper"
 
 module Mapper
   def self.map_stream(input, output, error_output)
-    input.each_line do |line|
+    input.each do |line|
       begin
         #"metrics.ziplist.com/live/ webmetric::ip::route::tdb::ttot::tvw::url|production/*"
         timestamp,
@@ -101,6 +102,4 @@ module Mapper
   end
 end
 
-if __FILE__ == $0
-  Mapper.map_stream(ARGF, STDOUT, STDERR)
-end
+Mapper.map_stream(ARGF, STDOUT, STDERR)

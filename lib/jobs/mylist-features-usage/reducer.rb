@@ -1,12 +1,14 @@
 #!/usr/bin/ruby
 
+STDERR.puts "Starting Reducer"
+
 module Reducer
 
   def self.reduce_stream(input, output, error_output)
     item_count = 0
     stored_key = nil
 
-    input.each_line do |key|
+    input.each do |key|
       key = key.strip
       stored_key = key if stored_key.nil?
 
@@ -23,6 +25,4 @@ module Reducer
   end
 end
 
-if __FILE__ == $0
-  Reducer.reduce_stream(ARGF, STDOUT, STDERR)
-end
+Reducer.reduce_stream(ARGF, STDOUT, STDERR)
