@@ -8,7 +8,7 @@ module Reducer
     item_count = 0
     stored_key = nil
 
-    input.each do |key|
+    input.each_line do |key|
       key = key.strip
       stored_key = key if stored_key.nil?
 
