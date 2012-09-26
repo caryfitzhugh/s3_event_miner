@@ -1,3 +1,5 @@
+# http://www.localytics.com/docs/querying-analytics-data-with-mapreduce/
+
 S3_BUCKET = "s3-event-miner.ziplist.com"
 ROOT_DIR  = "lib"
 
@@ -73,7 +75,7 @@ task :run => :create_bucket do
     jobflow = Elasticity::JobFlow.new(ENV['AMAZON_ACCESS_KEY_ID'], ENV['AMAZON_SECRET_ACCESS_KEY'])
     jobflow.name = "#{selected_job[:name]} -- #{outbucket}"
     jobflow.placement                         = 'us-east-1a'
-    jobflow.instance_count       = 2
+    jobflow.instance_count       = 1
     jobflow.master_instance_type = 'm1.small'
     jobflow.slave_instance_type  = 'm1.small'
 
@@ -85,7 +87,7 @@ task :run => :create_bucket do
       "s3n://#{S3_BUCKET}/data/jobs/#{job_name}/reducer.rb")
 
     jobflow.add_step(streaming_step)
-
+    jobflow.run
   else
     puts "You needed to say 'yes'"
   end
