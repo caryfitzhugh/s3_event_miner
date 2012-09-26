@@ -11,9 +11,10 @@ Gem::Specification.new do |gem|
   gem.files         = `git ls-files`.split($\)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
-  gem.name          = "work"
+  gem.name          = "s3_event_miner"
   gem.require_paths = ["lib"]
   gem.version       = S3EventMiner::VERSION
 
+  gem.add_development_dependency     "pry"
   gem.add_runtime_dependency     "aws-s3"
 end
