@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency     "pry"
   gem.add_runtime_dependency     "aws-s3"
+  gem.add_runtime_dependency     "elasticity"
 end

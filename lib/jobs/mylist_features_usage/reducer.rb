@@ -6,17 +6,16 @@ module Reducer
     item_count = 0
     stored_key = nil
 
-    input.each_line do |line|
-      (key, quantity) = line.split("\t")
-
+    input.each_line do |key|
+      key = key.strip
       stored_key = key if stored_key.nil?
 
       if stored_key != key
         output.puts "#{stored_key}\t#{item_count}"
-        item_count = quantity.to_i
+        item_count = 1
         stored_key = key
       else
-        item_count += quantity.to_i
+        item_count += 1
       end
     end
 
@@ -25,5 +24,5 @@ module Reducer
 end
 
 if __FILE__ == $0
-  Reducer.map_stream(ARGF, STDOUT, STDERR)
+  Reducer.reduce_stream(ARGF, STDOUT, STDERR)
 end
