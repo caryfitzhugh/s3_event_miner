@@ -1,6 +1,4 @@
 # http://www.localytics.com/docs/querying-analytics-data-with-mapreduce/
-
-
 # No _ in names
 # Trailing / on input / output directories
 
