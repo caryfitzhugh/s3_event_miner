@@ -1,6 +1,5 @@
 #!/usr/bin/ruby
-require 'rubygems'
-require 'pry'
+
 require 'uri'
 
 STDERR.puts "Starting Mylist Features Mapper"

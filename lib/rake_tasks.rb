@@ -1,5 +1,9 @@
 # http://www.localytics.com/docs/querying-analytics-data-with-mapreduce/
 
+
+# No _ in names
+# Trailing / on input / output directories
+
 S3_BUCKET = "s3-event-miner.ziplist.com"
 ROOT_DIR  = "lib"
 
@@ -57,7 +61,7 @@ task :run => :create_bucket do
   selected_job = jobs[i]
   puts "Selected: #{selected_job[:name]}"
 
-  outbucket = "#{S3_BUCKET}/output/#{selected_job[:name]}/#{Time.now.to_i}"
+  outbucket = "#{S3_BUCKET}/output/#{selected_job[:name]}/#{Time.now.to_i}/"
   puts "Input will be from:\n\n#{selected_job[:input]}\n\n"
   puts "Output will be in:\n\n#{outbucket}\n\n"
 
@@ -69,7 +73,8 @@ task :run => :create_bucket do
     # Sync Files
     s3 = Elasticity::SyncToS3.new(S3_BUCKET,ENV['AMAZON_ACCESS_KEY_ID'], ENV['AMAZON_SECRET_ACCESS_KEY'])
     puts "Uploading job..."
-    s3.sync("#{File.dirname(__FILE__)}/jobs/#{selected_job[:name]}", "data/jobs/#{selected_job[:name]}")
+    s3.sync("#{File.dirname(__FILE__)}/jobs", "data/jobs")
+
     puts "boom - done!"
 
     jobflow = Elasticity::JobFlow.new(ENV['AMAZON_ACCESS_KEY_ID'], ENV['AMAZON_SECRET_ACCESS_KEY'])
@@ -80,10 +85,12 @@ task :run => :create_bucket do
     jobflow.slave_instance_type  = 'm1.small'
 
     # Input bucket, output bucket, mapper and reducer scripts
-    input_loc = "s3n://#{selected_job[:input]}"
-    output_loc= "s3n://#{outbucket}"
-    mapper    = "s3n://#{S3_BUCKET}/data/jobs/#{selected_job[:name]}/mapper.rb"
-    reducer   = "s3n://#{S3_BUCKET}/data/jobs/#{selected_job[:name]}/reducer.rb"
+    input_loc = "s3://#{selected_job[:input]}"
+    output_loc= "s3://#{outbucket}"
+    mapper    = "s3://#{S3_BUCKET}/data/jobs/#{selected_job[:name]}/mapper.rb"
+    reducer   = "s3://#{S3_BUCKET}/data/jobs/#{selected_job[:name]}/reducer.rb"
+    bootstrap    = "s3://#{S3_BUCKET}/data/jobs/bootstrap_ruby.sh"
+
     puts "input:"
     puts input_loc
     puts "\noutput:"
@@ -92,7 +99,8 @@ task :run => :create_bucket do
     puts mapper
     puts "\nreducer:"
     puts reducer
-
+    puts "bootstrap task"
+    puts bootstrap
     #   streaming_step = Elasticity::StreamingStep.new( input_loc, output_loc, mapper, reducer)
     #   jobflow.add_step(streaming_step)
     #   puts "Added streaming step.."
