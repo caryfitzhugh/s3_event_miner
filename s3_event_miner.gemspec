@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
   gem.version       = S3EventMiner::VERSION
 
   gem.add_development_dependency     "pry"
+  gem.add_development_dependency     "pry-nav"
   gem.add_runtime_dependency     "aws-s3"
   gem.add_runtime_dependency     "elasticity"
   gem.add_runtime_dependency     "elastic-mapreduce"
