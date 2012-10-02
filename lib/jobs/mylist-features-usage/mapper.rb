@@ -2,13 +2,10 @@
 
 require 'uri'
 
-STDERR.puts "Starting Mylist Features Mapper"
-
 module Mapper
   def self.map_stream(input, output, error_output)
     input.each_line do |line|
       begin
-        #"metrics.ziplist.com/live/ webmetric::ip::route::tdb::ttot::tvw::url|production/*"
         timestamp,
         user_id,
         delim,
@@ -18,6 +15,10 @@ module Mapper
         ttot,
         tvw,
         url    = line.split("\001")
+
+        if (url =~ /mylist/)
+          output.puts "total_mylist_actions"
+        end
 
         # Only looking for things where the url is www
         uri = URI(url)
